@@ -8,11 +8,11 @@ import {
 import {loading, cache} from "../Utils/Utils.js";
 
 const itemUpdater = (item, onlyLabel, onlyUnit) => {
-    item.data.description.value = convertText(item.data.description.value);
-    item.data.weight = convertValueToMetric(item.data.weight, 'pound');
+    item.system.description.value = convertText(item.system.description.value);
+    item.system.weight = convertValueToMetric(item.system.weight, 'pound');
 
-    item.data.target = convertDistance(item.data.target, onlyUnit);
-    item.data.range = convertDistance(item.data.range, onlyUnit);
+    item.system.target = convertDistance(item.system.target, onlyUnit);
+    item.system.range = convertDistance(item.system.range, onlyUnit);
 
     return item;
 }
@@ -85,13 +85,13 @@ const createNewCompendiumMeta = (metadata) => {
 export const relinkActor = async (entity, cache) => {
     for (const item in entity.items) {
         if (!entity.items.hasOwnProperty(item)) continue;
-        entity.items[item].data.description.value = await relinkText(entity.items[item].data.description.value, cache)
+        entity.items[item].system.description.value = await relinkText(entity.items[item].system.description.value, cache)
     }
     return entity;
 }
 
 export const relinkItem = async (entity, cache) => {
-    entity.data.description.value = await relinkText(entity.data.description.value, cache)
+    entity.system.description.value = await relinkText(entity.system.description.value, cache)
     return entity;
 }
 

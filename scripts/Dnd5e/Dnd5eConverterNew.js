@@ -12,11 +12,11 @@ const itemUpdater = async (item, onlyLabel, onlyUnit) => {
     if (item.getFlag("Foundry-MGL", "converted")) return;
     const itemClone = JSON.parse(JSON.stringify(item));
 
-    if (!onlyLabel) itemClone.data.description.value = convertText(itemClone.data.description.value);
-    if (!onlyLabel) itemClone.data.weight = convertValueToMetric(itemClone.data.weight, 'pound');
+    if (!onlyLabel) itemClone.system.description.value = convertText(itemClone.system.description.value);
+    if (!onlyLabel) itemClone.system.weight = convertValueToMetric(itemClone.system.weight, 'pound');
 
-    itemClone.data.target = convertDistance(itemClone.data.target, onlyUnit);
-    itemClone.data.range = convertDistance(itemClone.data.range, onlyUnit);
+    itemClone.system.target = convertDistance(itemClone.system.target, onlyUnit);
+    itemClone.system.range = convertDistance(itemClone.system.range, onlyUnit);
 
     if (item.labels.range) item.labels.range = labelConverter(item.labels.range);
 

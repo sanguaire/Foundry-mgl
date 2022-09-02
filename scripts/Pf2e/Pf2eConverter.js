@@ -86,11 +86,11 @@ const updateItem = async (item) => {
     const itemCopy = copyObject(item.data);
     if (item.getFlag("Foundry-MGL", "converted")) return;
 
-    if (itemCopy.data.area) itemCopy.data.area.value = convertValueToMetric(itemCopy.data.area.value, 'ft');
-    if (itemCopy.data.areasize) itemCopy.data.areasize.value = convertText(itemCopy.data.areasize.value);
-    itemCopy.data.description.value = convertText(itemCopy.data.description.value);
-    if (itemCopy.data.range) itemCopy.data.range.value = convertInconsistentText(itemCopy.data.range.value);
-    if (itemCopy.data.traits.value) itemCopy.data.traits.value = itemCopy.data.traits.value.map((trait) => convertTrait(trait));
+    if (itemCopy.system.area) itemCopy.system.area.value = convertValueToMetric(itemCopy.system.area.value, 'ft');
+    if (itemCopy.system.areasize) itemCopy.system.areasize.value = convertText(itemCopy.system.areasize.value);
+    itemCopy.system.description.value = convertText(itemCopy.system.description.value);
+    if (itemCopy.system.range) itemCopy.system.range.value = convertInconsistentText(itemCopy.system.range.value);
+    if (itemCopy.system.traits.value) itemCopy.system.traits.value = itemCopy.system.traits.value.map((trait) => convertTrait(trait));
 
     item.setFlag("Foundry-MGL", "converted", true);
     await item.update(itemCopy);
@@ -100,20 +100,20 @@ const updateActor = async (actor) => {
     const actorCopy = copyObject(actor.data);
     if (actor.getFlag("Foundry-MGL", "converted")) return;
 
-    if (Array.isArray(actorCopy.data.traits.senses))
-        actorCopy.data.traits.senses.map((sense)=> {
+    if (Array.isArray(actorCopy.system.traits.senses))
+        actorCopy.system.traits.senses.map((sense)=> {
             sense.value = convertInconsistentText(sense.value);
             return sense;
         })
-    else if (actorCopy?.data?.traits?.senses?.value) actorCopy.data.traits.senses.value = convertText(actorCopy?.data?.traits?.senses?.value);
+    else if (actorCopy?.data?.traits?.senses?.value) actorCopy.system.traits.senses.value = convertText(actorCopy?.data?.traits?.senses?.value);
 
-    actorCopy.data.attributes.speed = speedConverter(actorCopy?.data?.attributes?.speed);
-    if (actorCopy?.data?.details?.speed) actorCopy.data.details.speed = convertText(actorCopy?.data?.details?.speed);
-    if (actorCopy.type === 'vehicle') actorCopy.data.details.space = convertVehicleSizes(actorCopy?.data?.details?.space)
+    actorCopy.system.attributes.speed = speedConverter(actorCopy?.data?.attributes?.speed);
+    if (actorCopy?.data?.details?.speed) actorCopy.system.details.speed = convertText(actorCopy?.data?.details?.speed);
+    if (actorCopy.type === 'vehicle') actorCopy.system.details.space = convertVehicleSizes(actorCopy?.data?.details?.space)
 
     await actor.setFlag("Foundry-MGL", "converted", true);
     await actor.update(actorCopy);
-    await updateItems(actor.data.items);
+    await updateItems(actor.system.items);
 }
 
 export {updateActor, updateItem, speedConverter, convertInconsistentText, convertTrait, convertI18NObject, addNewSizes, convertVehicleSizes}
