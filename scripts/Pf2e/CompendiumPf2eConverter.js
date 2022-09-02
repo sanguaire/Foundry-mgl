@@ -5,11 +5,11 @@ import {convertInconsistentText, convertTrait, convertVehicleSizes, speedConvert
 import {journalUpdater, relinkActor, relinkItem, relinkJournals, typeSelector} from '../Dnd5e/Compendium5eConverter.js';
 
 const itemConverter = (item) => {
-    if (item.data.area) item.data.area.value = String(convertValueToMetric(item.data.area.value, 'ft'));
-    if (item.data.areasize) item.data.areasize.value = convertText(item.data.areasize.value);
-    item.data.description.value = convertText(item.data.description.value);
-    if (item.data.range) item.data.range.value = convertInconsistentText(item.data.range.value);
-    if (item.data.traits.value) item.data.traits.value = item.data.traits.value.map((trait) => convertTrait(trait));
+    if (item.system.area) item.system.area.value = String(convertValueToMetric(item.system.area.value, 'ft'));
+    if (item.system.areasize) item.system.areasize.value = convertText(item.system.areasize.value);
+    item.system.description.value = convertText(item.system.description.value);
+    if (item.system.range) item.system.range.value = convertInconsistentText(item.system.range.value);
+    if (item.system.traits.value) item.system.traits.value = item.system.traits.value.map((trait) => convertTrait(trait));
 
     return item;
 }
@@ -22,26 +22,26 @@ const itemsConverter = (items) => {
 }
 
 const actorConverter = (actor) => {
-    actor.data.traits.senses.value = convertText(actor?.data?.traits?.senses?.value);
-    actor.data.attributes.speed = speedConverter(actor?.data?.attributes?.speed);
+    actor.system.traits.senses.value = convertText(actor?.data?.traits?.senses?.value);
+    actor.system.attributes.speed = speedConverter(actor?.data?.attributes?.speed);
 
     itemsConverter(actor.items);
 }
 
 const vehicleConverter = (vehicle) => {
-    vehicle.data.details.space = convertVehicleSizes(vehicle.data.details.space);
-    vehicle.data.details.speed = convertText(vehicle?.data?.details?.speed);
+    vehicle.system.details.space = convertVehicleSizes(vehicle.system.details.space);
+    vehicle.system.details.speed = convertText(vehicle?.data?.details?.speed);
 }
 
 const classConverter = (entity) => {
-    Object.keys(entity.data.items).forEach((key) => {
-        const item = entity.data.items[key];
+    Object.keys(entity.system.items).forEach((key) => {
+        const item = entity.system.items[key];
         const packLabel = game.packs.get(item.pack)?.metadata?.label;
         if (!packLabel) return;
         const metrifiedLabel = `${packLabel} Metrified`;
-        entity.data.items[key].pack = `world.${metrifiedLabel.slugify({strict: true})}`;
+        entity.system.items[key].pack = `world.${metrifiedLabel.slugify({strict: true})}`;
     })
-    entity.data.description.value = convertText(entity.data.description.value);
+    entity.system.description.value = convertText(entity.system.description.value);
 }
 
 
